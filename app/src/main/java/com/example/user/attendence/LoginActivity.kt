@@ -2,6 +2,7 @@ package com.example.user.attendence
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_login.*
@@ -19,6 +20,19 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        val pref=getSharedPreferences("event",0)
+        val token=pref.getString("access_token","")
+        if(token!=""){
+            startActivity(intentFor<EventsActivity>())
+            finish()
+        }
+
+           if(pref.getString("access_token","")!="")
+           {
+               startActivity(intentFor<EventsActivity>())
+               finish()
+           }
     }
 
     fun doLogin(view: View) {
@@ -62,7 +76,13 @@ class LoginActivity : AppCompatActivity() {
                             }
                         }
                         400 -> {
-
+                                 AlertDialog.Builder(this@LoginActivity)
+                                         .setTitle("Error")
+                                         .setMessage("An error is occured!")
+                                         .setNeutralButton("ok"){dialog,which->
+                                             dialog.dismiss()
+                                         }
+                                         .show()
                         }
                         404 -> {
 
